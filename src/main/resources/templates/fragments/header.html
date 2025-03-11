@@ -1,0 +1,18 @@
+<nav class="navbar navbar-expand-lg" th:fragment="header">
+    <div class="collapse navbar-collapse justify-content-around" id="navbarSupportedContent">
+        <ul class="nav navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/restaurant/home}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/restaurant/menu/1}">menu</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/restaurant/admin/add}">add dish</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
