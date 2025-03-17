@@ -8,10 +8,15 @@
 </head>
 <body>
 <div class="main">
-  <div class="error-container" style="text-align: center;">
-    <h1 class="error-handing">403  unauthorized Access!</h1>
-    <a href="/restaurant/home" class="btn btn-primary">Go to the Landing Page!!!</a>
-  </div>
+  <header th:include="@{/fragments/header.html}"></header>
+
+  <div class="content">
+    <div class="error-container" style="text-align: center;">
+        <h1 class="error-handing">403  unauthorized Access!</h1>
+        <a href="/restaurant/home" class="btn btn-primary">Go to the Landing Page!!!</a>
+    </div>
+  </div><footer th:include="@{fragments/footer.html}"></footer>
+
 </div>
 
 </body>

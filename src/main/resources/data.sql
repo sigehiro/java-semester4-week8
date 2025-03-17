@@ -10,3 +10,9 @@ INSERT INTO dish (name, category, price)
                   ('Pho', 'Vietnamese', 8.49),
                   ('Ramen', 'Japanese', 9.99),
                   ('Falafel', 'Middle Eastern', 6.99);
+
+
+INSERT INTO my_user (username, password, role)
+VALUES ('owner', '1234', 'ADMIN');
+INSERT INTO my_user (username, password, role)
+VALUES ('guest', '1234', 'USER');

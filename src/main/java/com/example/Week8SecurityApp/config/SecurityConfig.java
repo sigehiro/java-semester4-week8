@@ -1,16 +1,15 @@
 package com.example.Week8SecurityApp.config;
 
+import com.example.Week8SecurityApp.handlers.CustomAuthenticationEntryPoint;
+import com.example.Week8SecurityApp.services.MyUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 
@@ -18,42 +17,59 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final MyUserDetailService myUserDetailService;
+    public SecurityConfig(MyUserDetailService myUserDetailService) {
+        this.myUserDetailService = myUserDetailService;
+    }
+
     // Security filter chain configuration
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorize) -> authorize
-            .requestMatchers("/restaurant/home").permitAll()
-            .requestMatchers("/restaurant/menu/**").hasAnyRole("USER", "ADMIN")
+            .requestMatchers("/restaurant/home", "login/**", "register/**").permitAll()
+            .requestMatchers("/restaurant/menu/**").authenticated()
             .requestMatchers("/restaurant/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated()
         )
             // Use default login page for form-based authentication
             // Configure logout behavior
-            .formLogin(Customizer.withDefaults())
+//            .formLogin(Customizer.withDefaults())
+            .formLogin(form -> form
+//                .loginPage("/login")
+//                .failureHandler(new CustomAuthenticationFailureHandler()) // カスタムハンドラを追加
+                .loginPage("/login") // ログインページを指定
+//                .failureUrl("/login?error") // ログイン失敗時のURL
+                .defaultSuccessUrl("/restaurant/home") // 成功時のリダイレクト先
+            )
+                // ログアウト設定(Navでログアウトを押した際の設定)
             .logout(logout -> logout
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/restaurant/home")
+                .logoutSuccessUrl("/restaurant/home?logout=true")
+            )
+//             exceptionHandlingを設定
+            .exceptionHandling(exceptionHandling ->
+                exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
             );
+
         return http.build();
     }
 
-    // In-memory user details configuration
     @Bean
-    public UserDetailsService userDetailsService() {
-        // Define an admin user with the role ADMIN
-        UserDetails admin1 = User.withUsername("owner")
-                .password(passwordEncoder().encode("password"))
-                .roles("ADMIN")
-                .build();
+    public AuthenticationProvider authenticationProvider() {
+        // Create a new instance of DaoAuthenticationProvider
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
 
-        // Define a normal user with the role USER
-        UserDetails user1 = User.withUsername("guest")
-                .password(passwordEncoder().encode("password"))
-                .roles("USER")
-                .build();
+        // Set the password encoder to use BCryptPasswordEncoder
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
 
-        return new InMemoryUserDetailsManager(admin1, user1);
+        // Set the user details service to use MyUserDetailService
+        daoAuthenticationProvider.setUserDetailsService(myUserDetailService);
+
+        // Return the configured DaoAuthenticationProvider instance
+        return daoAuthenticationProvider;
     }
+
+
 
     // Ignore security for certain static resources (e.g., CSS files, H2 console)
     @Bean

@@ -97,3 +97,60 @@ footer {
     margin: 5px;
     padding: 10px;
 }
+
+/* style.css */
+
+/* Register Page styles */
+.register-page {
+    background-color: #f8f9fa;
+}
+
+.register-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.register-card {
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: white; /* カードの背景色を白に設定 */
+}
+
+/* Custom button styles */
+.btn-custom {
+    background-color: #007bff; /* Blue color for the button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 15px; /* ボタンのパディングを増やす */
+    font-size: 16px;
+    transition: background-color 0.3s; /* ホバー時のアニメーション */
+}
+
+.btn-custom:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Login Page styles */
+.login-page {
+    background-color: #f8f9fa; /* Same background color */
+}
+
+.login-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-card {
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: white; /* カードの背景色を白に設定 */
+}
